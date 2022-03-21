@@ -1,14 +1,36 @@
 import jovian
 from jovian.pythondsa import evaluate_test_cases
+
+def test_location(cards, query, mid):
+    mid_number = cards[mid]
+    print("mid: ", mid, ", mid_number: ", mid_number)
+    if mid_number == query:
+        if mid-1 >=0 and cards[mid-1] == query:
+            return 'left'
+        else:
+            return 'found'
+    elif mid_number < query:
+        return 'left'
+    else:
+        return 'right'
+
 def locate_card(cards, query):
     # iterate through the list and check whether the number corresponds
-    position = 0
-    while position < len(cards):
-        if cards[position] == query:
-            return position
-        position += 1
-    return -1
+    lo, hi = 0, len(cards)-1
 
+    while lo <= hi:
+        mid = (lo + hi) // 2
+        mid_number = cards[mid]
+        print("lo: ", lo, "hi: ", hi, "mid: ", mid, "mid_number: ", mid_number)
+        result = test_location(cards, query, mid)
+
+        if result == 'found':
+            return mid
+        elif result == 'left':
+            hi = mid - 1
+        elif result == 'right':
+            lo = mid + 1
+    return -1
 
 # card = [13, 11, 10, 7, 4, 3, 2, 1]
 # q = 7
@@ -64,19 +86,10 @@ tests = [{
 # numbers can repeat in cards
 # query occurs multiple times
 
-nums1 = [1,3]
-nums2 = [2]
-nums3 = nums1 + nums2
-real = sorted(nums3)
-sum = 0
-for i in real:
-    sum += i
-median = sum / len(real)
-print(median)
-print(real)
-result = locate_card(tests[1]['input']['cards'], tests[1]['input']['query'])
-# evaluate_test_cases(locate_card, tests)
+
+# result = locate_card(tests[1]['input']['cards'], tests[1]['input']['query'])
+evaluate_test_cases(locate_card, tests)
 # result = tests[0]['output']
 # jovian.commit(project='python-binary-search', environment=None)
-print(result)
+# print(result)
 # print(tests)
